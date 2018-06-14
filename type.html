@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>type</title>
+<!-- 2018-06-08 五 15:55 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="yuanchuan cao" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">type</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. introduction</a>
+<ul>
+<li><a href="#sec-1-1">1.1. eBattleDefineDB</a></li>
+<li><a href="#sec-1-2">1.2. 技能的种类.eSkillContentType</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+<a href="krr.html">go back to code-map</a>
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> introduction</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> eBattleDefineDB</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+
+<pre class="src src-csharp"><span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">enum</span> <span style="color: #7CB8BB;">eBattleDefineDB</span>
+{
+        <span style="color: #DFAF8F;">OrderValueBaseMin</span>,   <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">1</span>
+        <span style="color: #DFAF8F;">OrderValueBaseMax</span>,    <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">100</span>
+        <span style="color: #DFAF8F;">OrderValueDecreaseStart</span>,  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">50</span>
+        <span style="color: #DFAF8F;">OrderValueDecreaseInterval</span>, <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">2</span>
+        <span style="color: #DFAF8F;">OrderValueMin</span>,   <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">15</span>
+        <span style="color: #DFAF8F;">OrderValueMax</span>,  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">500</span>
+        <span style="color: #DFAF8F;">MemberChangeRecast</span>,
+        <span style="color: #DFAF8F;">DamageRandMin</span>,
+        <span style="color: #DFAF8F;">DamageRandMax</span>,
+        <span style="color: #DFAF8F;">RecoverBonusMin</span>,
+        <span style="color: #DFAF8F;">RecoverBonusMax</span>,
+        <span style="color: #DFAF8F;">RecoverBonusInterval</span>,
+        <span style="color: #DFAF8F;">RecoverBonusPlus</span>,
+        <span style="color: #DFAF8F;">RecoverBonusSameElement</span>,
+        <span style="color: #DFAF8F;">GuardCoef</span>,
+        <span style="color: #DFAF8F;">ElementCoefRegist</span>,
+        <span style="color: #DFAF8F;">ElementCoefWeak</span>,
+        <span style="color: #DFAF8F;">ElementCoefRegistMin</span>,
+        <span style="color: #DFAF8F;">ElementCoefRegistMax</span>,
+        <span style="color: #DFAF8F;">ElementCoefDefaultMin</span>,
+        <span style="color: #DFAF8F;">ElementCoefDefaultMax</span>,
+        <span style="color: #DFAF8F;">ElementCoefWeakMin</span>,
+        <span style="color: #DFAF8F;">ElementCoefWeakMax</span>,
+        <span style="color: #DFAF8F;">CriticalProbablityMax</span>,
+        <span style="color: #DFAF8F;">CriticalStrongElementCoef</span>,
+        <span style="color: #DFAF8F;">CriticalCoef</span>,
+        <span style="color: #DFAF8F;">CriticalAdjustmentCoef</span>,
+        <span style="color: #DFAF8F;">TogetherCharge_OnAttack</span>,
+        <span style="color: #DFAF8F;">TogetherCharge_OnAttack_weak</span>,
+        <span style="color: #DFAF8F;">TogetherCharge_OnAttack_regist</span>,
+        <span style="color: #DFAF8F;">TogetherCharge_OnAttackCriticalCoef</span>,
+        <span style="color: #DFAF8F;">TogetherCharge_OnDamage</span>,
+        <span style="color: #DFAF8F;">TogetherCharge_OnDamage_weak</span>,
+        <span style="color: #DFAF8F;">TogetherCharge_OnDamage_regist</span>,
+        <span style="color: #DFAF8F;">TogetherCharge_OnStun</span>,
+        <span style="color: #DFAF8F;">TogetherAttackChainCoef_0</span>,
+        <span style="color: #DFAF8F;">TogetherAttackChainCoef_1</span>,
+        <span style="color: #DFAF8F;">TogetherAttackChainCoef_2</span>,
+        <span style="color: #DFAF8F;">StateAbnormalConfusion_Turn</span>,
+        <span style="color: #DFAF8F;">StateAbnormalParalysis_Turn</span>,
+        <span style="color: #DFAF8F;">StateAbnormalParalysis_CancelProbability</span>,
+        <span style="color: #DFAF8F;">StateAbnormalPoison_Turn</span>,
+        <span style="color: #DFAF8F;">StateAbnormalPoison_DamageRatio</span>,
+        <span style="color: #DFAF8F;">StateAbnormalBearish_Turn</span>,
+        <span style="color: #DFAF8F;">StateAbnormalSleep_Turn</span>,
+        <span style="color: #DFAF8F;">StateAbnormalSleep_LoadFactor</span>, <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">2.0</span>
+        <span style="color: #DFAF8F;">StateAbnormalUnhappy_Turn</span>,
+        <span style="color: #DFAF8F;">StateAbnormalSilence_Turn</span>,
+        <span style="color: #DFAF8F;">StateAbnormalIsolation_Turn</span>,
+        <span style="color: #DFAF8F;">HateValueMin</span>,
+        <span style="color: #DFAF8F;">HateValueMax</span>,
+        <span style="color: #DFAF8F;">HateAIConditionCoef</span>,
+        <span style="color: #DFAF8F;">HateValueJoin1</span>,
+        <span style="color: #DFAF8F;">DyingHpRatio</span>,
+        <span style="color: #DFAF8F;">RegistedFriendTurn</span>,
+        <span style="color: #DFAF8F;">UnregistedFriendTurn</span>,
+        <span style="color: #DFAF8F;">StunValueMax</span>,
+        <span style="color: #DFAF8F;">StunAdditiveOrderValueRatioWhenStun</span>,  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">20</span>
+        <span style="color: #DFAF8F;">StunAdditiveOrderValueRatioWhenAttacked</span>,  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">50</span>
+        <span style="color: #DFAF8F;">StunDecreaseValueOnTurnStart</span>,
+        <span style="color: #DFAF8F;">BorderFromSkillLv_0</span>,
+        <span style="color: #DFAF8F;">BorderFromSkillLv_1</span>,
+        <span style="color: #DFAF8F;">BorderFromSkillLv_2</span>,
+        <span style="color: #DFAF8F;">DamageDiv</span>,
+        <span style="color: #DFAF8F;">Max</span>
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 技能的种类.eSkillContentType</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+
+<pre class="src src-csharp"><span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">enum</span> <span style="color: #7CB8BB;">eSkillContentType</span>
+{
+        <span style="color: #DFAF8F;">Attack</span>,
+        <span style="color: #DFAF8F;">Recover</span>,
+        <span style="color: #DFAF8F;">StatusChange</span>,
+        <span style="color: #DFAF8F;">StatusChangeReset</span>,
+        <span style="color: #DFAF8F;">Abnormal</span>,
+        <span style="color: #DFAF8F;">AbnormalRecover</span>,
+        <span style="color: #DFAF8F;">AbnormalDisable</span>,
+        <span style="color: #DFAF8F;">AbnormalAdditionalProbability</span>,
+        <span style="color: #DFAF8F;">ElementResist</span>,
+        <span style="color: #DFAF8F;">ElementChange</span>,
+        <span style="color: #DFAF8F;">WeakElementBonus</span>,
+        <span style="color: #DFAF8F;">NextAttackUp</span>,
+        <span style="color: #DFAF8F;">NextAttackCritical</span>,
+        <span style="color: #DFAF8F;">Barrier</span>,
+        <span style="color: #DFAF8F;">RecastChange</span>,
+        <span style="color: #DFAF8F;">KiraraJumpGaugeChange</span>,
+        <span style="color: #DFAF8F;">KiraraJumpGaugeCoef</span>,
+        <span style="color: #DFAF8F;">OrderChange</span>,
+        <span style="color: #DFAF8F;">HateChange</span>,
+        <span style="color: #DFAF8F;">ChargeChange</span>,
+        <span style="color: #DFAF8F;">ChainCoefChange</span>,
+        <span style="color: #DFAF8F;">Card</span>,
+        <span style="color: #DFAF8F;">StunRecover</span>,
+        <span style="color: #DFAF8F;">Regene</span>,
+        <span style="color: #DFAF8F;">Num</span>
+}
+</pre>
+</div>
+
+
+<p>
+<a href="code-map.html">go back to code map </a> <a href="#sec-1">go top</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: yuanchuan cao</p>
+<p class="date">Created: 2018-06-08 五 15:55</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

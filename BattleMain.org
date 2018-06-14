@@ -1,0 +1,143 @@
+[[file:krr.html][go back to code-map]]
+
+* introduction
+
+  BattleMain 继承于 [[*GameStateMain][GameStateMain]], 整个游戏都是同过改变某个State然后不断的 Update()来实现游戏的运行， 这些包括进入，退出，更新，退出后处理，变更状态等多个[[*GameStateBase][method]]。BattleMain 继承了这一点，并通过重写 (override) 其中的一些 method 来实现交互：
+
+  - BattleMain 最重要的成员就是 [[(m_System)][BattleSystem]]
+  - BattleMain 最核心的工作就是 Update, 其中最重要的一步就是 [[(systemUpdate)][BattleSystem.SystemUpdate()]]
+  - [[(start)][BattleMain.Start()]] 如下
+    1. [[(initID)][NextState 初始化是 -1]], 并被改变为 1
+    2. [[(baseUpdate)][BattleMain.Update()]] 进入 [[(mainUpdate)][GameStateMain.Update()]]，NextState被重置-1
+    3. 由于NextState 的改变，保存了当前状态之后， 我们进入[[(changeState)][.ChangeState()]]
+    4. 它已被改写为[[(override)][BattleMain.ChangeState()]]
+    5. 初始化后进入核心的 [[(systemUpdate)][BattleSystem.SystemUpdate()]]
+    6. *并且由于NextState被重置-1，第3,4步被跳过， 以后的[[(baseUpdate)][BattleMain.Update()]] 等价于[[(systemUpdate)][BattleSystem.SystemUpdate()]]*
+
+
+** variables
+
+   #+BEGIN_SRC csharp -r
+
+		public const int STATE_MAIN = 1;
+
+		public const int STATE_RESULT = 2;
+
+		public const int STATE_FINAL = 3;
+
+		private BattleSystem m_System; // method: System() (ref:m_System)
+
+   #+END_SRC
+
+
+** methods
+
+   #+BEGIN_SRC csharp -r
+
+		private void Start() {base.SetNextState(1);}   (ref:start)
+
+		protected override void Update()
+		{
+
+			base.Update();  // GameStateMain.Update(); (ref:baseUpdate)
+
+			this.m_System.SystemUpdate(); (ref:systemUpdate)
+		}
+
+		private void LateUpdate()
+		{
+			this.m_System.SystemLateUpdate();
+		}
+
+		public override GameStateBase ChangeState(int stateID) (ref:override)
+		{
+			switch (base.m_NextStateID)
+			{
+			case 1:
+				return new BattleState_Main(this); //初始化程序
+			case 2:
+				return new BattleState_Result(this);
+			case 3:
+				return new BattleState_Final(this);
+			default:
+				return null;
+			}
+		}
+
+   #+END_SRC
+
+
+   
+
+** GameStateMain
+   
+   [[*GameStateBase][GameStateBase]] 提供了事后将要被重写的诸如 进入，退出，更新，退出后处理，变更状态等多个 [[*GameStateBase][method]].  注意初始化 [[(initID)][~m_NextStateID~]] 是 -1.
+
+*** variables
+    
+     #+BEGIN_SRC csharp -r
+
+		public const int COMMON_STATE_FINAL = 2147483646;
+
+		protected int m_PrevStateID = -1;
+
+		protected int m_NextStateID = -1; (ref:initID)
+
+		private SceneDefine.eSceneID m_NextTransitSceneID = SceneDefine.eSceneID.None;
+
+		protected GameStateBase m_CurrentState;
+
+     #+END_SRC
+
+   
+*** GameStateBase
+    
+    this is for override functions
+    
+    #+BEGIN_SRC  csharp  :tangle yes
+
+		public abstract int GetStateID();
+
+		public abstract void OnStateEnter();
+
+		public abstract int OnStateUpdate();
+
+		public abstract void OnStateExit();
+
+		public abstract void OnDispose();         
+
+		protected abstract void OnClickBackButton(bool isCallFromShortCut);
+    #+END_SRC   
+
+    
+*** methods
+    
+      #+BEGIN_SRC csharp -r
+
+		public void SetNextState(int nextStateID){}
+
+		protected virtual void Update()      (ref:mainUpdate)
+		{
+                 // check if nextstate is changed: 
+                 // if so, we need to save current id to m_PrevStateID
+                 //// then: .OnStateExit(); .OnDispose(); and set (NextStateID = -1)
+                 //// GameStateBase.ChangeState(this.m_NextStateID); (ref:changeState)
+                 //// .OnStateEnter() 
+
+                 // at last: .OnStateUpdate()
+		}
+
+		private void OnDestroy() {// .OnDispose and set to null}
+
+		public virtual GameStateBase ChangeState(int stateID){return null;} // this will be override 
+
+		public virtual bool IsCompleteDestroy()	{return true;}
+    
+      #+END_SRC
+
+
+
+
+
+
+[[file:krr.html][go back to code map ]] [[*introduction][go top]]

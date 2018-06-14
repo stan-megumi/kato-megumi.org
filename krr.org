@@ -1,0 +1,455 @@
+* 战斗系统与外部交互： 进入与退出
+   
+  - 在战斗系统外部， 通过 [[file:BattleMain.html][BattleMain]] 与 游戏app交互 (根据用户指令进入，根据战斗系统结束状态销毁)
+  - 最终 [[file:BattleMain.html::6][BattleMain.Update() 变成 BattleSystem.SystemUpdate() ]]
+  - 在战斗系统内部， 通过 BattleSystem 不断的状态更新，内部不同状态跳转 以及 用户指令的输入 使得 BattleSystem.SystemUpdate() 根据系统状态进行不同的工作
+
+所以虽然战斗系统只是整个游戏的一部分，如果我们只关注战斗系统的话，可以把它想象成这样无限循环一个单独运转的程序：
+
+ :  ---用户输入  --->  BattleSystem.SystemUpdate() ---> 用户输入 ---
+
+
+* BattleSystem: 运行
+
+   BattleSystem 运行设计跟  [[file:BattleMain.html][BattleMain]] 一脉相承, 即使初始化也是通过 SystemUpdate()来完成. 他们主要通过三个状态参数来实现来回跳转: ~e_Mode~, ~ePrepareStep~, ~eMainStep~. 
+
+** BattleSystem.SystemUpdate() 
+    它根据 ~e_Mode~ 行动。
+    ~e_Mode~ 有这四种状态： Prepare, BattleMain, BattleFinished, Destroy。
+    - Prepare会调用 [[*~BattleSystem.Update_Prepare()~][~BattleSystem.Update_Prepare()~]], 它负责准备进入每一波怪时的准备工作,准备完了就改状态为 BattleMain
+    - BattleMain会调用 [[*~BattleSystem.Update_Main()~][ ~BattleSystem.Update_Main()~]]， 他负责所有准备完毕到这一波怪杀完或者战斗结束（杀完所有波怪或者自己死光并且不课石头）中间所有事情，所以显然他会不断检查战斗是否结束或者这波怪打完了没有
+    - 只有当BattleMain判定为游戏结束时会改状态为BattleFinished，然后就在这里空循环，等待上层控制去 Destroy
+
+:  --- Prepare ---> BattleMain ---> Prepare (下一波怪) ---> BattleMain  ... ----> BattleFinished ---> Destroy    
+
+** ~BattleSystem.Update_Prepare()~
+    它负责准备进入每一波怪时的准备工作.
+    它根据 ePrepareStep 行动。
+    ePrepareStep 有这四种主要状态：First, ~Prepare_0~, ~Prepare_1~, End
+    
+    - First 分两步:
+      
+      1. 当这是首次进入战斗时， 它会初始化我方阵营，敌方阵营全部人员，kirara技能， 设置默认参数（自动化，战斗速度等等），进入第二步
+      2. 当这是准备下一波怪时，直接跳到这一步， 把我方阵营设置为敌方阵营的 Target （guess why no need to require the reversal setup） 进入 ~Prepare_0~
+	 
+    - ~Prepare_0~: 更新敌我双方阵营人员信息， 进入 ~Prepare_1~
+    - ~Prepare_1~: 更新UI 进入 End
+      
+    - End: 更新人物技能名字， 开始计算画面中所有人行动速度，绘制行动条，调整画面视角，同时记录现在是第几波怪， 最终跳转到 [[*~BattleSystem.Update_Main()~][ ~BattleSystem.Update_Main()~]]
+
+:    ---> First ---> Prepare_0 --->  Prepare_1 ---> End ---> BattleSystem.Update_Main()-->
+ 
+** ~BattleSystem.Update_Main()~
+    
+    他负责所有准备完毕到这一波怪杀完或者战斗结束（杀完所有波怪或者自己死光并且不课石头）中间所有事情.
+    它根据 eMainStep 行动。
+    eMainStep 的具体状态太多，很多状态分 ~X_01~ , ~X_02~, 这样分主要是为了等待上一步完成， 我们将它归纳了一下:
+
+    - eMainStep.First :: 播放WARNNING一闪而过的画面，绘制每个人物（储存到内存里），如果需要就绘制跳到下一波的渐进画面,
+                         ,绘制每个人物血条状态条, 跳转至eMainStep.OrderCheck
+
+
+    - eMainStep.OrderCheck :: 这个是最被反复循环的一个状态
+      + 更新行动条，技能cd，从晕眩状态解除， 查看能否一起放珍藏等等工作。 (this.TurnStartProcess())
+      + 如果是该行动的是人物，则进入 eMainStep.TurnSkipCheck
+      + 如果是该行动的是Card，则进入 CommandExecute
+
+    - eMainStep.TurnSkipCheck :: 看看本次人物的操作是跳过去还是等待用户命令
+      + 如果晕眩，睡眠，瘫痪， 放一些动画然后 跳转到本轮操作结束: eMainStep.TurnEnd (虽然并不是直接跳转，但是会到这一步，记住这里是简介)
+      + 否则等待用户命令 跳转到 eMainStep.CommandInputStartCheck 
+
+    - eMainStep.CommandInputStartCheck :: 这个是等待并把不同用户指令导入到各自状态中的状态
+      + 准备好 ~m_InputData.Result~
+      + 如果这个是行动命令, 跳转到 CommandExecute
+      + 如果进入板凳选择，实现换人功能，重新跳转到 eMainStep.CommandInputStartCheck 等待指令
+      + 如果这个是奇拉垃技能，那么就产生技能效果(ExecMasterSkill())，播放技能动画， 重新跳转到 eMainStep.CommandInputStartCheck 等待指令
+      + 如果是一起放珍藏，效果根据需要打开选择珍藏页面，退回，选择顺序， 绘制一起跳的画面，跳转到 ~eMainStep.TogetherAttackExecute_0~ 
+
+    - ~eMainStep.TogetherAttackExecute_0~ :: 一次珍藏效果实现与动画播放
+      + 产生珍藏buff，珍藏产生的战斗结果 ExecTogetherAttackOfTurnOwner()
+      + 计算伤害和回复，因为要画到动画里
+      + 放动画 跳转到 PostCommandExecute， 并在这里反复互跳直到所有人珍藏放完 (敌人死完的话就跳过)
+
+    - eMainStep.CommandExecute :: 执行单次攻击，回复，技能，珍藏命令 
+      + 如果是珍藏，产生珍藏buff(ExecTogetherAttackOfTurnOwner()),
+      + 单人攻击 ExecCommandOfTurnOwner();
+      + 技能: this.ExecSkillCard();
+      + 跳转到 PostCommandExecute
+
+    - eMainStep.PostCommandExecute :: 清理本轮技能并且检查战斗状态
+      + 清理 PostAfterExecCommand(~this.m_ExecCommand.SolveResult~); 谁死了啊，更新一下各自状态啊，然后放放相应变化的动画
+      + 如果多人珍藏没放完，跳到 ~eMainStep.TogetherAttackExecute_0~ 继续放
+      + 如果发现画面上有死人， 把替补换上来， 继续跳转到 eMainStep.PostCommandExecute继续检查
+      + 最后跳转到 eMainStep.StunExecute， 检查有人被晕了没有
+
+    - eMainStep.StunExecute :: 检查被晕眩的处置
+      + 检查谁被晕了 (this.StunCheckProcess())
+      + 如果有人晕 更新那些人的状态 (StunOccurProcess() -> StunApplyProcess() ->  StunApplyPostProcess())
+      + 跳到 eMainStep.TurnEnd
+
+    - eMainStep.TurnEnd :: 本轮结束收尾检查
+      + 检查己方是否全死完(gameover)，如果是，打开是否要课石头重试一次，回复己方所有状态，往下检查，如果不是 跳转到 eMainStep.ToResult
+      + 检查是否胜利，如果是, 播放动画， 跳转到 eMainStep.ToResult，如果不是，往下检查
+      + 检查这一波怪是否打完，如果是播放动画， 跳到 ~Update_Prepare().Prepare_End~, 准备下一波怪
+      + 如果检查s都不是，跳转到下一个行动周期： eMainStep.OrderCheck
+
+    - eMainStep.ToResult :: 战斗结束
+      + 返回 eMode.BattleFinished 使 SystemUpdate 进入空循环
+
+本轮人物被晕眩
+:    ---> First ---> OrderCheck --->  TurnSkipCheck ---> TurnEnd ---> OrderCheck --> ... --> ToResult
+
+本轮人物放技能
+:    ---> First ---> OrderCheck --->  TurnSkipCheck ---> CommandInputStartCheck ---> CommandExecute ---> PostCommandExecute --> StunCheck---> TurnEnd ----> OrderCheck --> ... --> ToResult   
+
+本轮人物放多人珍藏
+
+:    ---> First ---> OrderCheck --->  TurnSkipCheck ---> CommandInputStartCheck ---> TogetherAttackExecute_0 ---> PostCommandExecute --> TogetherAttackExecute_0 ---> PostCommandExecute --> StunCheck---> TurnEnd ----> OrderCheck --> ... --> ToResult   
+
+    
+
+* BattleSystem: 实现
+
+** 它应该有的样子，和它实际的样子
+
+     #+BEGIN_VERSE
+     
+    整个战斗系统的设计本来应该一目了然， 就像上帝视角一样，或者像序列博弈(sequential game)那样：
+    整个游戏有多少参与人(agents), 这些参与人有什么属性(生命值作为payoff),每个agents有个信息集和行动集(action set)，
+    每轮根据信息集从中行动集选取一个行动，并由payoff function给出行动结果，直到游戏有人退出。
+
+    在程序上所有信息和method被直接放到系统那，当做全局变量，方便来回调用
+    换言之， 人物是一堆属性的集合， 它的行动要么等待用户输入，要么由系统给出，除开选择一个行动以外什么都不用做。
+    伤害计算，行动值计算，属性相克，对方是否打晕等等作为信息集都是由系统更新给人物。
+     
+    #+END_VERSE
+   ----------------------
+     #+BEGIN_VERSE
+     
+    然而你游负责写人物(CharacterHandler)这个class的人，除开人物需要的属性以外，貌似还负责行动值的计算，眩晕的计算(CharacterBattle), AI的设计 (BattleAIData)等等工作，
+    因为每项任务所需要的信息集不同导致有需要把人物外的信息塞到CharacterHandle里面来，导致信息集和设计十分混乱。
+
+    例如晕眩的数值计算本身是什么都不需要的, 却被与其他状态，伤害计算 (BattleCommandParser)隔离开来。
+     
+    例如任何攻击的特效被放到SkillActionPlayer里，晕眩的却被塞到CharacterBattle里，以致于你在 [[*~BattleSystem.Update_Main()~][~BattleSystem.Update_Main()~]] 里单独看到检查晕眩的一段。
+     
+    例如行动值的计算。单人行动值的计算，完毕之后，还需要行动条(BattleOrder)去为每个行动值排序，于是还是需要外部在做一次工作。
+     
+    例如AI攻击的技能和技能释放对象的选择函数所需要信息集是巨大的，这里却是单人的信息集，所以它又几乎需要把所有信息放置进来(至少需要敌我组队信息)
+    敌我组队信息 (BattlePartyData) 自身是一个人物集合， 然后又被放置到单个人物的信息内，而这种放置并不是指针的， 因为
+    我们可以看到 [[*~BattleSystem.Update_Main()~][~BattleSystem.Update_Main()~]] 每一行动轮都重复着更新组队信息到每个人物的信息内。
+    然而每一轮貌似又只有一个人物需要行动？
+
+    这种设计的混乱加上人性的懒惰，导致不同程序员的互相引用泛滥（理论下层不该调用上层函数，感谢C#吧, 好的C#没有上下层， 我看你编译器能多吊）
+    当某个函数把某属性交给下一个函数处理时，充斥着反复在组队成员中循环找寻Owner的工作， 亦或者是
+    某位程序员中在一个函数中加一个判定做了safe check，
+    另外一个程序员(也许可能就是他自己)直接利用这个safe check无所顾忌的做了个循环把所有人物扔了进去，而不是将他轻松就知道的人物进行直接调用
+   
+    结果就是: 现在的这个(CharacterHandler)复杂而且功能繁多 （呵呵哈哈哈或或或或或或或或或
+     
+    #+END_VERSE
+
+ -----------------------
+      #+BEGIN_QUOTE
+      
+      我发誓我只吐槽这一次
+
+       #+END_QUOTE
+
+ 
+** 约定俗成
+
+   | 中文 | 英文    | 出处                     | 解释                                    |
+   |------+---------+--------------------------+-----------------------------------------|
+   | 命令 | command | BattleCommandData        | 包含普攻，技能，珍藏，奇拉拉技能        |
+   | 位置 | join    | BattleDefine.eJoinMember | 包含     屏幕1,2,3位，板凳1,2位，好友位 |
+
+
+
+
+   
+** 人物.CharacterHandler
+
+** 组队.BattlePartyData    
+
+
+    
+** 行动条.BattleOrder
+   
+*** 被调用的时机 (只考虑改变行动条的情形)
+    - 当每一波怪刚进场初始化时，[[*~BattleSystem.Update_Prepare()~][~BattleSystem.Update_Prepare()~]] 进行到 ePrepareStep.End 会调用 ~BattleSystem.SetupWaveData(int waveindex)~ 函数进行初始化， 主要的工作就是初始行动条的初始化;
+    - 手动嫖别人老婆和替换替补老婆的时候,替换掉行动条第一个人,ordervalue=0: ~BattleSystem.ChangePlayerJoinMemberOnInterruputFriend()~ 
+    - 自动死亡时，新上来的人继承原有的死人的OrderValue:  ~BattleSystem.CalcAutoMemberChange()~ 中的一句 ~item.m_OrderValue = deadCharaData3.m_OrderValue~
+    - 当别人老婆嫖的次数到了之后,如果替换的老婆没死，就继承原来的行动条单元,如果死了(理论上不会出现),删除该单元: ~BattleSystem.ChangePlayerJoinMemberOnGoBackFriend()~
+      + 一通操作之后先检查死亡，再检查别人老婆次数是否到了，然后就是晕眩 ~eMainStep.PostCommandExecute~
+    - 每轮的操作对己方的行动条影响
+      + 单次命令
+      + 集体珍藏
+    - 每轮操作对敌方的行动条影响
+      + 普通人遭到晕眩
+      + 弱者遭到晕眩
+
+*** 行动条的结构 
+    1. 行动条上的单元.BattleOrder.FrameData (~m_Frames~): 
+       - 单元类型.eFrameType: 轮到人或怪(Chara) 还是技能(Card)来执行本轮操作, 技能(Card)诸如3轮加血包，boss的攻击包等, 也被视作行动条上的一个单元
+       - 行动值.OrderValue
+       - 所有人.owner:  人或怪(Chara)就是自身，技能(Card)就是技能包的释放者
+       - 技能包(Card).CardArguments: 技能包的具体信息， 如果是Chara，这里赋值是NULL
+	 + ~m_AliveNum~
+	 + ~m_RefID~
+	 + ~m_CommandIndexWasCreated~
+	 + ~BattleCommandData.m_Command~
+	 + [[file:type.html::9][技能的种类.eSkillContentType]]: Card的技能种类:攻击，治疗等等，它甚至是来源于 ~.m_Command~ 的数据
+    
+    2. 行动值的特殊跳跃.BattleOrder.TogetherData (~m_TogetherData~): 同时释放珍藏会造成某个行动单元进行非常规跳跃
+       - ~m_JoinOrder~ (List<BattleDefine.eJoinMember>): 它包含了要进行释放珍藏的人以及顺序
+
+    3. 集体释放珍藏的最大次数: BattleTogetherGauge: (~m_Gauge~), 由珍藏条储能次数给出： 0, 1 , 2 ,3
+
+
+*** 行动条的基本设定
+
+    - 行动值的排序.BattleOrder.SortOrder(): 采用的是StableSort,同样行动值的前提下，原有位置保持不变，由行动值小到大排序, 大概因此(138比139快)
+    - 行动值的更新.UpdateOrderValue(): 所有单位减去排第一的行动值, 如果<0，重置为0 （理论上不应该发生）, 这个会在 ~BattleSystem.Update_Main()~ 进行到 ~eMainStep.OrderCheck~ 时召唤 ~BattleSystem.TurnStartProcess()~ 调用
+    - 集体释放珍藏的判定: 遇到第一个敌人,敌人释放的技能(Card)或者己方某个人物被判定状态异常(由CharacterBattle.CanBeTogetherAttack()定义:麻痹，沉默，睡眠，晕眩)就停止， 按顺序将人物放到TogetherData的list里，直到list里面的人数跟集体释放珍藏的最大次数的数目一样
+       
+    
+*** 行动值的计算公式
+
+    1. 算法. ~BattleCommandParser.CalcOrderValue(int spd, float loadFactor, float orderCoef)~
+       
+         #+BEGIN_SRC csharp
+        	float num = BattleUtility.DefVal(eBattleDefineDB.OrderValueBaseMax);
+		int num2 = (int)BattleUtility.DefVal(eBattleDefineDB.OrderValueDecreaseStart); // 
+		if (spd >= num2)
+		{
+			int num3 = (spd - num2) / (int)BattleUtility.DefVal(eBattleDefineDB.OrderValueDecreaseInterval);
+			num -= (float)(num3 + 1);
+		}
+		num = Mathf.Max(num, BattleUtility.DefVal(eBattleDefineDB.OrderValueBaseMin));
+		float value = (float)(int)(num * loadFactor * orderCoef);
+		return Mathf.Clamp(value, BattleUtility.DefVal(eBattleDefineDB.OrderValueMin), BattleUtility.DefVal(eBattleDefineDB.OrderValueMax));
+       #+END_SRC
+
+       - num 是初始基数，100， num2为初始基础最小值,50，具体的查询请看
+       - 以给定spd=138为例 (结果与spd=139一样)
+       - 首先这个值范围是[15,500] 之间. ([eBattleDefineDB.OrderValueMin ,eBattleDefineDB.OrderValueMax])
+       - 速度基数一开始设置为 (eBattleDefineDB.OrderValueBaseMax)为 100.0,并且为浮点数
+	 + 如果spd大于等于这个基数，就要对这个值进行调整为: (spd-50)/2并取整 ~(138-50)/2=44~, 再加一之后被100减去 ~100-(44+1)=55~ ,最终基数为55
+	 + 如果小于这个判定，基数为100
+       - 最终速度为 基数乘以后面两个乘数再取整
+
+    2. 参数的一般调用情形 ~BattleCommandParser.CalcOrderValue(CharacterHandler charaHndl, BattleCommandData command)~
+	
+       - Spd 为建筑加成和好感度加成后的面板数据
+       - LoadFactor: 初始化为1，
+	 + 如果执行命令， 则这个值为该命令的 command.LoadFactor;
+	 + 如果并没有执行命令，则检查是否深处睡眠状态，设这个值为2  这就是被晕眩时的情况 ~BattleSystem.TurnSkipProcess()~
+       - orderCoef (statusBuffValue): 初始化为1，如果你身上叠了N层速度buff,每个buff都有一个Value(.Val)，这些buff.Val加总之后数值为Sum， 那么statusBuffValue的值最终是 Sum-N+1, [[(GetStatusBuffValue)][~BattleDefine.BuffStack.GetValue(true)~]]. 这个值不为0即可，为0则调整为1，但最终会被算法设置上下限
+       
+       
+*** 初始化时的行动值计算
+    
+    - 对于双方屏幕三个位置,计算每个人的OrderValue: 
+         #+BEGIN_SRC csharp
+          BattleCommandParser.CalcOrderValue(member.CharaBattle.Param.FixedSpd(), 1f, 1f);
+       #+END_SRC
+      + 注意初始化的数据由 ~CharacterBattleParam.SetupParams(CharacterHandler owner, float[] townBuffParams)~ 给出
+      + 注意这个FixedSpd()是面板数据，它会根据好感度，建筑等级 受到影响
+	1. ~m_FixedBaseSpd = this.m_Owner.CharaParam.Spd;~   人物基础数据
+	2. ~m_FixedBaseSpd = EditUtility.CalcParamCorrect(this.m_FixedBaseSpd, param2.m_CorrectSpd);~ 好感度加成
+	3. ~m_FixedBaseSpd = EditUtility.CalcParamCorrect(this.m_FixedBaseSpd, this.m_TBuff[5]);~ 建筑物加成
+	4. 最终这个 ~m_FixedBaseSpd~ 被确定为 ~CharaBattle.Param.FixedSpd()~
+	5. CalcParamCorrect算法为, 注意 correct 为10, 137*1.1=150.7再向上取整变成151
+            #+BEGIN_SRC csharp
+		public static int CalcParamCorrect(int val, float correct)
+		{
+			float num = 1f + correct * 0.01f;
+			return (int)Mathf.Ceil((float)val * num);
+		}
+	   #+END_SRC
+
+    - 把所有人变成FrameData放到BattleSystem的BattleOrder里，顺序为先放我方三人，再放敌方三人, 因此根据[[*%E8%A1%8C%E5%8A%A8%E6%9D%A1%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AE%BE%E5%AE%9A][行动条基本设定]], 同等速度下，我方优先，然后位置优先
+
+    
+
+    
+
+
+*** 单次命令的行动条变化
+    1. Chara Type ~BattleCommandParser.UpdateOrder(BattleOrder battleOrder, int commandIndex, bool isUseUniqueSkill)~
+       - 按照 ~BattleCommandParser.CalcOrderValue(owner, commandIndex, isUseUniqueSkill)~ 计算新的行动值
+       - 并复制同样一个单元但是有新算好的orderValue重新排位到行动条上
+		
+    2. Card  Type  ~BattleCommandParser.UpdateOrder(BattleOrder battleOrder, int commandIndex, bool isUseUniqueSkill)~
+       - Card的可使用次数-1
+       - 如果Card的可使用次数仍然>0, 按照 ~BattleCommandParser.CalcOrderValue(owner.CharaBattle.Param.FixedSpd(), frameDataAt.m_CardArgs.m_Command.LoadFactor, 1f)~ 计算新的行动值
+       - 注意到一来没有状态影响，二来，Card 行动值FixedSpd 继承于释放者的FixedSpd
+       - 并复制同样一个单元但是有新算好的orderValue重新排位到行动条上
+	 
+    3. 最终在每轮把处理后的第一个单元去掉 ~BattleOrder.SlideFrames()~, 所以1,2步才能选择复制,否则会有重复	 
+    
+*** 集体珍藏的行动条变化
+    - 由 ~UpdateOrderAfterTogetherAttack(BattleOrder battleOrder, List<CharacterHandler> togetherAttackedCharaHndls)~ 单独处理
+    - 先从行动条里删除所有释放珍藏的单元
+    - 分别计算orderValue: ~orderValue = BattleCommandParser.CalcOrderValue(togetherAttackedCharaHndls[k], -1, true)~  从这里提出珍藏command 再用算法
+    - 再按珍藏释放顺序把释放单元逐一加回来，并赋予刚算好的orderValue ~battleOrder.AddFrameData(BattleOrder.eFrameType.Chara, togetherAttackedCharaHndls[k], orderValue, null)~
+    - 这里根据基本设定，即使在两者ordervalue 一样时，释放珍藏顺序也改变了原有优先级
+
+*** 敌方普通人遭到晕眩 ~BattleCommandParser.UpdateOrderOnStun(BattleOrder battleOrder)~
+    - 判断敌人如果被晕眩，由施法者FixedSpd()和命令计算 num： ~num=BattleCommandParser.CalcOrderValue(owner, owner.CharaBattle.ExecCommand)~
+    - 该敌人的orderValue加上 ~num * (BattleUtility.DefVal(eBattleDefineDB.StunAdditiveOrderValueRatioWhenStun) * 0.01f)~ (num*0.2)
+    - 等价于原有 orderValue+num*1.2
+    - 对行动条重新排序
+
+*** 敌方弱者遭到晕眩
+    - 在普通晕眩基础上加上 ~orderValue*(BattleUtility.DefVal(eBattleDefineDB.StunAdditiveOrderValueRatioWhenAttacked) * 0.01f)~ (num*0.5)
+    - 等价于原有orderValue*1.5
+    - 对行动条重新排序
+
+
+		
+** 伤害状态计算与绘制.SkillActionPlayer
+
+   
+** AI的实现.BattleAIParser
+
+*** 概览
+     #+BEGIN_VERSE
+    先确定释放什么技能，再确定对谁释放
+    #+END_VERSE
+
+    
+*** 被调用的时机
+    
+    [[*~BattleSystem.Update_Main()~][~BattleSystem.Update_Main()~]] 进行到 eMainStep.CommandInputStartCheck 等待指令输入时，
+     会调用 BattleSystem.CommandInputStart()函数，如果判定本轮行动人是AI, 
+     会调用 BattleSystem.CommandDecisionByAI()函数, 在指定行动AI人物owner后，
+     会调用 BattleAIParser.SolveBattleAI(owner)函数, 并将结果储存到 BattleAISolveResult里。
+
+     
+*** 返回的结果.BattleAISolveResult
+    
+     它包括三个参数: 放什么技能， 对谁放， 技能是不是珍藏 
+     
+	- public int ~m_CommandIndex~ = -1;  // 命令index，最终命令在 ~owner.CharacterBattle.m_commands~ 里找到这个命令
+
+	- public BattleDefine.eJoinMember ~m_TargetJoin~ = BattleDefine.eJoinMember.None; // 命令释放的对象的所处位置
+
+	- public bool ~m_IsChargeSkill~;    // 这个技能需不需要充能, 即珍藏
+   
+   
+*** 确定释放什么技能.SolveBattleAI
+    
+   1. 加载的AI命令集信息 ( ~BattleAIData~ ) 的构建: 
+      - ( ~BattleAIExecData~ ) :  它包含一个 命令index（什么命令）， 一个比重 ( ~m_Ratio~ ), 是否按顺序选择对象 ~BattleAIExecData.isCommandTargetSelectionInOrder~ ， 一堆释放条件 和 一堆flag 
+      - ( ~BattleAICommandData~ )： 一个 ~BattleAIExecData~ 的集合, 使用限制次数 ~m_ExecNum~ 以及 一堆条件 ~.m_Conditions~ 
+      - ( ~BattleAIPatternData~ ) ： 一个 ~BattleAICommandData~ 的集合
+      - ( ~BattleAIData~ ) ： 包含了一堆 ~BattleAIPatternData~ 以及如何切换他们的信息， 技能释放对象的最后选择顺序( ~m_SingleTargetPriorityWhenHateSame~ [[*%E5%8D%95%E4%BD%93%E4%BB%87%E6%81%A8%E4%B8%8E%E4%BB%87%E6%81%A8%E6%8E%92%E5%BA%8F.BattleAIHateResult][单体仇恨与仇恨排序.BattleAIHateResult]] 中的 ABC or CBA )
+
+   2. 所以我们先找出来一个可用命令集 ~aiCommands[]~ 相当于 ~BattleAIPatternData~ 以供选择
+      - 有珍藏可以放: ~BattleAIParser.SolveBattleAI_ChargeSkill~ ， 就只把珍藏放进 ~aiCommands[]~ 里
+      - 没珍藏放技能: ~BattleAIParser.SolveBattleAI_Skill~ ， 从0开始在一堆 ~BattleAIPatternData~ 里选择一个满足切换条件的
+	
+   3. 然后我们再在 ~aiCommands[]~ 找到第一个满足下列两个条件的命令集 相当于 ~BattleAICommandData~ 以供选择: 
+      - 命令集释放次数（ ~CharaBattle.GetAIExecedNum~ ）未达到限制 ( ~BattleAICommandData.m_ExecNum~ )
+      - ai，ai技能可释放的对象满足 ( ~BattleAIParser.JudgeBattleAICommandConditions~ ) 命令集释放条件 ( ~BattleAICommandData.m_Conditions~ ) 
+      - 如果
+        + 一个都没有找到: 跳到 5
+        + 找到一个命令集： 停止寻找（我们只需一个）， 跳到 4
+
+   4. 最后我们需要在这个选定的命令集 ~BattleAICommandData~ 里随机挑出一个命令 ~BattleAIExecData~ 来:
+      - 构建一个向量 array, 对应于 ~BattleAICommandData~ 里的各个 ~BattleAIExecData~
+      - 把比重 ~BattleAIExecData.m_Ratio~ 加总， 然后对应array的位置计算比重/比重和， array 就是 比重的比重
+      - 随机生成 0 到 1 中间的一个数字
+      - 从第一个 array 的数值一直加加到 如果我们再加下一个数值就会超过这个随机数时停止， 返回下一个的index
+      - 这个 index 指定的 ~BattleAIExecData~ 中所指定的 命令index 如果找得到就是我们要释放的技能
+      - 如果找不到 跳到 5
+
+   5. 释放 ai 可以释放的第一个命令，往往是普攻 ( ~CharacterHandler.CharaBattle.GetCommandDatas()[0]~ )
+
+   6. 附注: 3 中的( ~BattleAIParser.JudgeBattleAICommandConditions~ ) 包含非常多的选项（我方敌方血线，异常状态，技能使用，存活数量，集体攻击，换人等等）， 所以 ( ~BattleAIData~ )可以设计的很通用
+
+   7. 下一步： 我们需要根据选出来的技能算出仇恨（利用互克，血线，老弱病残等等）来选出技能释放对象
+   
+   
+*** 施放对象的构建
+
+   1. 我们先根据是对敌方放还是己方放，把可以释放的对象找出来放到list里， 这个list是按站位排序的，我们会在 确定该技能释放的对象.SolveTargetJoinFromHateResults中发现，条件完全一样时是会选择第一个，所以这一步很重要。
+   2. 如果释放对象只有一个的话就是他了，如果释放对象是全体我们就不用算了
+   3. 如果还要求 ~BattleAIExecData.isCommandTargetSelectionInOrder~ 就要考虑是否要加入仇恨吸引因素， 毕竟骑士技能和你忍叔可以拉仇恨 ( ~CharaBattle.Param.GetHateChangeValue()~ )
+      - 这个值都>0的只有一个那就是它了， 跳过后面所有计算
+      - 这个值都=0的只有一个那就是它了， 跳过后面所有计算
+      - 这个值都=0的有很多个那么从 上次技能使用位置 ( ~CharaBattle.GetOldSingleTargetIndex(commandData.MainSkillTargetType)~ )的下一个位置开始 （0->1->2->0）,这个值都=0的谁第一个在这个位置上就选谁， 跳过后面所有计算
+      - 这个值>0的有多个那么在他们中间开始计算仇恨
+      - 如果全<0 对初始list开始计算仇恨
+	   
+
+
+*** 状态仇恨的计算.CalcHitSingleConditionCount
+
+   - 如果要求 ~BattleAIExecData.isCommandTargetSelectionInOrder~ 就不用算了， ~m_HitSingleConditionCount =0~
+
+   - 否则进行五个状态的判断:
+     
+     + ~是不是要死了.Judge_Dying~
+
+     + ~是不是某特定属性.Judge_Element~
+
+     + ~属性是否克制.Judge_WeakElement~
+
+     + ~是不是某特定职业.Judge_Class~
+
+     + ~是否落入不正常状态.Judge_StateAbnormal~
+
+   - 加总.CalcHitSingleConditionCount : ~m_HitSingleConditionCount = [ 0,  5 ]~
+   
+
+*** 单体(target)伤害仇恨的计算.BattleAIParser.SolveTargetJoin
+  1. 在eBattleDefineDB.HateValueMin 与 HateValueMin.HateValueMax+1 之间生成一个随机数, 复制给 ~m_HateValue~
+  2. ~m_HateValue *= ( 1f + target.Param.HateChangeValue)~
+  3. ~m_HateValue += (float)((eBattleDefineDB.HateAIConditionCoef) * .m_HitSingleConditionCount)~ 
+  4. 如果你是屏幕上第一个位置（join）的人的话，不好意思还要
+     ~m_HateValue += BattleUtility.DefVal(eBattleDefineDB.HateValueJoin1)~
+
+*** 单体仇恨与仇恨排序.BattleAIHateResult   
+	
+    - 它包括三个参数: 谁，伤害仇恨，状态仇恨
+     
+      + public BattleDefine.eJoinMember  ~m_Join~;  // 计算仇恨时该单体位置
+   
+      + public float ~m_HateValue~;  // 伤害仇恨 
+
+      + public int ~m_HitSingleConditionCount~; // 状态仇恨： 计算满足哪几个不好的状态的，谁不好的状态最多
+   
+    - 排序: 如何判断谁比谁更可恨   
+      + BattleAIParser.CompareHateResult: 伤害仇恨越高，谁更可恨，同等伤害仇恨，谁状态仇恨越高越可恨
+      + 若仍然相同 请选择  ~CompareHateResult_JoinABC~ （ ~CompareHateResult_JoinCBA~ ） ： 谁的位置更靠前（后）更可恨
+
+
+    
+
+
+   
+
+
+*** 确定该技能释放的对象.SolveTargetJoinFromHateResults	
+      - 我们算出所有对象的单体仇恨
+      - 我们按照单体仇恨与仇恨排序来算出最可恨的人（嘤嘤嘤）
+      - 如果统统一样可恨就选第一个当释放对象
+      - 如果不一样，但最可恨的有多个就看 ~m_SingleTargetPriorityWhenHateSame~ 是 ~CompareHateResult_JoinABC~ 还是 ~CompareHateResult_JoinCBA~ 按位置排序完来选了
+
+ 
+
+
+   
+** 实现.BattleSystem
+** 不会怎么提的数据导入.BattleSystemData
+
+** 不会怎么提的人机交互.BattleInputData
+
+** 不会怎么提的多媒体效果实现.XScene
+
+
+		
+

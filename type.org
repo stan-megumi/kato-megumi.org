@@ -1,0 +1,115 @@
+[[file:krr.html][go back to code-map]]
+
+* introduction
+
+** eBattleDefineDB
+
+   #+BEGIN_SRC csharp
+	public enum eBattleDefineDB
+	{
+		OrderValueBaseMin,   // 1
+		OrderValueBaseMax,    // 100
+		OrderValueDecreaseStart,  //50
+		OrderValueDecreaseInterval, //2
+		OrderValueMin,   //15
+		OrderValueMax,  //500
+		MemberChangeRecast,
+		DamageRandMin,
+		DamageRandMax,
+		RecoverBonusMin,
+		RecoverBonusMax,
+		RecoverBonusInterval,
+		RecoverBonusPlus,
+		RecoverBonusSameElement,
+		GuardCoef,
+		ElementCoefRegist,
+		ElementCoefWeak,
+		ElementCoefRegistMin,
+		ElementCoefRegistMax,
+		ElementCoefDefaultMin,
+		ElementCoefDefaultMax,
+		ElementCoefWeakMin,
+		ElementCoefWeakMax,
+		CriticalProbablityMax,
+		CriticalStrongElementCoef,
+		CriticalCoef,
+		CriticalAdjustmentCoef,
+		TogetherCharge_OnAttack,
+		TogetherCharge_OnAttack_weak,
+		TogetherCharge_OnAttack_regist,
+		TogetherCharge_OnAttackCriticalCoef,
+		TogetherCharge_OnDamage,
+		TogetherCharge_OnDamage_weak,
+		TogetherCharge_OnDamage_regist,
+		TogetherCharge_OnStun,
+		TogetherAttackChainCoef_0,
+		TogetherAttackChainCoef_1,
+		TogetherAttackChainCoef_2,
+		StateAbnormalConfusion_Turn,
+		StateAbnormalParalysis_Turn,
+		StateAbnormalParalysis_CancelProbability,
+		StateAbnormalPoison_Turn,
+		StateAbnormalPoison_DamageRatio,
+		StateAbnormalBearish_Turn,
+		StateAbnormalSleep_Turn,
+		StateAbnormalSleep_LoadFactor, // 2.0
+		StateAbnormalUnhappy_Turn,
+		StateAbnormalSilence_Turn,
+		StateAbnormalIsolation_Turn,
+		HateValueMin,
+		HateValueMax,
+		HateAIConditionCoef,
+		HateValueJoin1,
+		DyingHpRatio,
+		RegistedFriendTurn,
+		UnregistedFriendTurn,
+		StunValueMax,
+		StunAdditiveOrderValueRatioWhenStun,  //20
+		StunAdditiveOrderValueRatioWhenAttacked,  //50
+		StunDecreaseValueOnTurnStart,
+		BorderFromSkillLv_0,
+		BorderFromSkillLv_1,
+		BorderFromSkillLv_2,
+		DamageDiv,
+		Max
+	}
+
+   #+END_SRC
+
+** 技能的种类.eSkillContentType
+
+   #+BEGIN_SRC csharp
+
+	public enum eSkillContentType
+	{
+		Attack,
+		Recover,
+		StatusChange,
+		StatusChangeReset,
+		Abnormal,
+		AbnormalRecover,
+		AbnormalDisable,
+		AbnormalAdditionalProbability,
+		ElementResist,
+		ElementChange,
+		WeakElementBonus,
+		NextAttackUp,
+		NextAttackCritical,
+		Barrier,
+		RecastChange,
+		KiraraJumpGaugeChange,
+		KiraraJumpGaugeCoef,
+		OrderChange,
+		HateChange,
+		ChargeChange,
+		ChainCoefChange,
+		Card,
+		StunRecover,
+		Regene,
+		Num
+	}
+
+  #+END_SRC
+
+
+[[file:code-map.html][go back to code map ]] [[*introduction][go top]]

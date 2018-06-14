@@ -1,0 +1,1119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>krr</title>
+<!-- 2018-06-08 五 15:43 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="yuanchuan cao" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">krr</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 战斗系统与外部交互： 进入与退出</a></li>
+<li><a href="#sec-2">2. BattleSystem: 运行</a>
+<ul>
+<li><a href="#sec-2-1">2.1. BattleSystem.SystemUpdate()</a></li>
+<li><a href="#sec-2-2">2.2. <code>BattleSystem.Update_Prepare()</code></a></li>
+<li><a href="#sec-2-3">2.3. <code>BattleSystem.Update_Main()</code></a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. BattleSystem: 实现</a>
+<ul>
+<li><a href="#sec-3-1">3.1. 它应该有的样子，和它实际的样子</a></li>
+<li><a href="#sec-3-2">3.2. 约定俗成</a></li>
+<li><a href="#sec-3-3">3.3. 人物.CharacterHandler</a></li>
+<li><a href="#sec-3-4">3.4. 组队.BattlePartyData</a></li>
+<li><a href="#sec-3-5">3.5. 行动条.BattleOrder</a>
+<ul>
+<li><a href="#sec-3-5-1">3.5.1. 被调用的时机 (只考虑改变行动条的情形)</a></li>
+<li><a href="#sec-3-5-2">3.5.2. 行动条的结构</a></li>
+<li><a href="#sec-3-5-3">3.5.3. 行动条的基本设定</a></li>
+<li><a href="#sec-3-5-4">3.5.4. 行动值的计算公式</a></li>
+<li><a href="#sec-3-5-5">3.5.5. 初始化时的行动值计算</a></li>
+<li><a href="#sec-3-5-6">3.5.6. 单次命令的行动条变化</a></li>
+<li><a href="#sec-3-5-7">3.5.7. 集体珍藏的行动条变化</a></li>
+<li><a href="#sec-3-5-8">3.5.8. 敌方普通人遭到晕眩 <code>BattleCommandParser.UpdateOrderOnStun(BattleOrder battleOrder)</code></a></li>
+<li><a href="#sec-3-5-9">3.5.9. 敌方弱者遭到晕眩</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-6">3.6. 伤害状态计算与绘制.SkillActionPlayer</a></li>
+<li><a href="#sec-3-7">3.7. AI的实现.BattleAIParser</a>
+<ul>
+<li><a href="#sec-3-7-1">3.7.1. 概览</a></li>
+<li><a href="#sec-3-7-2">3.7.2. 被调用的时机</a></li>
+<li><a href="#sec-3-7-3">3.7.3. 返回的结果.BattleAISolveResult</a></li>
+<li><a href="#sec-3-7-4">3.7.4. 确定释放什么技能.SolveBattleAI</a></li>
+<li><a href="#sec-3-7-5">3.7.5. 施放对象的构建</a></li>
+<li><a href="#sec-3-7-6">3.7.6. 状态仇恨的计算.CalcHitSingleConditionCount</a></li>
+<li><a href="#sec-3-7-7">3.7.7. 单体(target)伤害仇恨的计算.BattleAIParser.SolveTargetJoin</a></li>
+<li><a href="#sec-3-7-8">3.7.8. 单体仇恨与仇恨排序.BattleAIHateResult</a></li>
+<li><a href="#sec-3-7-9">3.7.9. 确定该技能释放的对象.SolveTargetJoinFromHateResults</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-8">3.8. 实现.BattleSystem</a></li>
+<li><a href="#sec-3-9">3.9. 不会怎么提的数据导入.BattleSystemData</a></li>
+<li><a href="#sec-3-10">3.10. 不会怎么提的人机交互.BattleInputData</a></li>
+<li><a href="#sec-3-11">3.11. 不会怎么提的多媒体效果实现.XScene</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 战斗系统与外部交互： 进入与退出</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>在战斗系统外部， 通过 <a href="BattleMain.html">BattleMain</a> 与 游戏app交互 (根据用户指令进入，根据战斗系统结束状态销毁)
+</li>
+<li>最终 <a href="BattleMain.html">BattleMain.Update() 变成 BattleSystem.SystemUpdate() </a>
+</li>
+<li>在战斗系统内部， 通过 BattleSystem 不断的状态更新，内部不同状态跳转 以及 用户指令的输入 使得 BattleSystem.SystemUpdate() 根据系统状态进行不同的工作
+</li>
+</ul>
+
+<p>
+所以虽然战斗系统只是整个游戏的一部分，如果我们只关注战斗系统的话，可以把它想象成这样无限循环一个单独运转的程序：
+</p>
+
+<pre class="example">
+---用户输入  ---&gt;  BattleSystem.SystemUpdate() ---&gt; 用户输入 ---
+</pre>
+</div>
+</div>
+
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> BattleSystem: 运行</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+BattleSystem 运行设计跟  <a href="BattleMain.html">BattleMain</a> 一脉相承, 即使初始化也是通过 SystemUpdate()来完成. 他们主要通过三个状态参数来实现来回跳转: <code>e_Mode</code>, <code>ePrepareStep</code>, <code>eMainStep</code>. 
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> BattleSystem.SystemUpdate()</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+它根据 <code>e_Mode</code> 行动。
+<code>e_Mode</code> 有这四种状态： Prepare, BattleMain, BattleFinished, Destroy。
+</p>
+<ul class="org-ul">
+<li>Prepare会调用 <a href="#sec-2-2"><code>BattleSystem.Update_Prepare()</code></a>, 它负责准备进入每一波怪时的准备工作,准备完了就改状态为 BattleMain
+</li>
+<li>BattleMain会调用 <a href="#sec-2-3"> <code>BattleSystem.Update_Main()</code></a>， 他负责所有准备完毕到这一波怪杀完或者战斗结束（杀完所有波怪或者自己死光并且不课石头）中间所有事情，所以显然他会不断检查战斗是否结束或者这波怪打完了没有
+</li>
+<li>只有当BattleMain判定为游戏结束时会改状态为BattleFinished，然后就在这里空循环，等待上层控制去 Destroy
+</li>
+</ul>
+
+<pre class="example">
+--- Prepare ---&gt; BattleMain ---&gt; Prepare (下一波怪) ---&gt; BattleMain  ... ----&gt; BattleFinished ---&gt; Destroy    
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> <code>BattleSystem.Update_Prepare()</code></h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+它负责准备进入每一波怪时的准备工作.
+它根据 ePrepareStep 行动。
+ePrepareStep 有这四种主要状态：First, <code>Prepare_0</code>, <code>Prepare_1</code>, End
+</p>
+
+<ul class="org-ul">
+<li>First 分两步:
+
+<ol class="org-ol">
+<li>当这是首次进入战斗时， 它会初始化我方阵营，敌方阵营全部人员，kirara技能， 设置默认参数（自动化，战斗速度等等），进入第二步
+</li>
+<li>当这是准备下一波怪时，直接跳到这一步， 把我方阵营设置为敌方阵营的 Target （guess why no need to require the reversal setup） 进入 <code>Prepare_0</code>
+</li>
+</ol>
+</li>
+
+<li><code>Prepare_0</code>: 更新敌我双方阵营人员信息， 进入 <code>Prepare_1</code>
+</li>
+<li><code>Prepare_1</code>: 更新UI 进入 End
+</li>
+
+<li>End: 更新人物技能名字， 开始计算画面中所有人行动速度，绘制行动条，调整画面视角，同时记录现在是第几波怪， 最终跳转到 <a href="#sec-2-3"> <code>BattleSystem.Update_Main()</code></a>
+</li>
+</ul>
+
+<pre class="example">
+---&gt; First ---&gt; Prepare_0 ---&gt;  Prepare_1 ---&gt; End ---&gt; BattleSystem.Update_Main()--&gt;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> <code>BattleSystem.Update_Main()</code></h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+他负责所有准备完毕到这一波怪杀完或者战斗结束（杀完所有波怪或者自己死光并且不课石头）中间所有事情.
+它根据 eMainStep 行动。
+eMainStep 的具体状态太多，很多状态分 <code>X_01</code> , <code>X_02</code>, 这样分主要是为了等待上一步完成， 我们将它归纳了一下:
+</p>
+
+<dl class="org-dl">
+<dt> eMainStep.First </dt><dd>播放WARNNING一闪而过的画面，绘制每个人物（储存到内存里），如果需要就绘制跳到下一波的渐进画面,
+,绘制每个人物血条状态条, 跳转至eMainStep.OrderCheck
+</dd>
+</dl>
+
+
+<dl class="org-dl">
+<dt> eMainStep.OrderCheck </dt><dd>这个是最被反复循环的一个状态
+<ul class="org-ul">
+<li>更新行动条，技能cd，从晕眩状态解除， 查看能否一起放珍藏等等工作。 (this.TurnStartProcess())
+</li>
+<li>如果是该行动的是人物，则进入 eMainStep.TurnSkipCheck
+</li>
+<li>如果是该行动的是Card，则进入 CommandExecute
+</li>
+</ul>
+</dd>
+
+<dt> eMainStep.TurnSkipCheck </dt><dd>看看本次人物的操作是跳过去还是等待用户命令
+<ul class="org-ul">
+<li>如果晕眩，睡眠，瘫痪， 放一些动画然后 跳转到本轮操作结束: eMainStep.TurnEnd (虽然并不是直接跳转，但是会到这一步，记住这里是简介)
+</li>
+<li>否则等待用户命令 跳转到 eMainStep.CommandInputStartCheck 
+</li>
+</ul>
+</dd>
+
+<dt> eMainStep.CommandInputStartCheck </dt><dd>这个是等待并把不同用户指令导入到各自状态中的状态
+<ul class="org-ul">
+<li>准备好 <code>m_InputData.Result</code>
+</li>
+<li>如果这个是行动命令, 跳转到 CommandExecute
+</li>
+<li>如果进入板凳选择，实现换人功能，重新跳转到 eMainStep.CommandInputStartCheck 等待指令
+</li>
+<li>如果这个是奇拉垃技能，那么就产生技能效果(ExecMasterSkill())，播放技能动画， 重新跳转到 eMainStep.CommandInputStartCheck 等待指令
+</li>
+<li>如果是一起放珍藏，效果根据需要打开选择珍藏页面，退回，选择顺序， 绘制一起跳的画面，跳转到 <code>eMainStep.TogetherAttackExecute_0</code> 
+</li>
+</ul>
+</dd>
+
+<dt> <code>eMainStep.TogetherAttackExecute_0</code> </dt><dd>一次珍藏效果实现与动画播放
+<ul class="org-ul">
+<li>产生珍藏buff，珍藏产生的战斗结果 ExecTogetherAttackOfTurnOwner()
+</li>
+<li>计算伤害和回复，因为要画到动画里
+</li>
+<li>放动画 跳转到 PostCommandExecute， 并在这里反复互跳直到所有人珍藏放完 (敌人死完的话就跳过)
+</li>
+</ul>
+</dd>
+
+<dt> eMainStep.CommandExecute </dt><dd>执行单次攻击，回复，技能，珍藏命令 
+<ul class="org-ul">
+<li>如果是珍藏，产生珍藏buff(ExecTogetherAttackOfTurnOwner()),
+</li>
+<li>单人攻击 ExecCommandOfTurnOwner();
+</li>
+<li>技能: this.ExecSkillCard();
+</li>
+<li>跳转到 PostCommandExecute
+</li>
+</ul>
+</dd>
+
+<dt> eMainStep.PostCommandExecute </dt><dd>清理本轮技能并且检查战斗状态
+<ul class="org-ul">
+<li>清理 PostAfterExecCommand(<code>this.m_ExecCommand.SolveResult</code>); 谁死了啊，更新一下各自状态啊，然后放放相应变化的动画
+</li>
+<li>如果多人珍藏没放完，跳到 <code>eMainStep.TogetherAttackExecute_0</code> 继续放
+</li>
+<li>如果发现画面上有死人， 把替补换上来， 继续跳转到 eMainStep.PostCommandExecute继续检查
+</li>
+<li>最后跳转到 eMainStep.StunExecute， 检查有人被晕了没有
+</li>
+</ul>
+</dd>
+
+<dt> eMainStep.StunExecute </dt><dd>检查被晕眩的处置
+<ul class="org-ul">
+<li>检查谁被晕了 (this.StunCheckProcess())
+</li>
+<li>如果有人晕 更新那些人的状态 (StunOccurProcess() -&gt; StunApplyProcess() -&gt;  StunApplyPostProcess())
+</li>
+<li>跳到 eMainStep.TurnEnd
+</li>
+</ul>
+</dd>
+
+<dt> eMainStep.TurnEnd </dt><dd>本轮结束收尾检查
+<ul class="org-ul">
+<li>检查己方是否全死完(gameover)，如果是，打开是否要课石头重试一次，回复己方所有状态，往下检查，如果不是 跳转到 eMainStep.ToResult
+</li>
+<li>检查是否胜利，如果是, 播放动画， 跳转到 eMainStep.ToResult，如果不是，往下检查
+</li>
+<li>检查这一波怪是否打完，如果是播放动画， 跳到 <code>Update_Prepare().Prepare_End</code>, 准备下一波怪
+</li>
+<li>如果检查s都不是，跳转到下一个行动周期： eMainStep.OrderCheck
+</li>
+</ul>
+</dd>
+
+<dt> eMainStep.ToResult </dt><dd>战斗结束
+<ul class="org-ul">
+<li>返回 eMode.BattleFinished 使 SystemUpdate 进入空循环
+</li>
+</ul>
+</dd>
+</dl>
+
+<p>
+本轮人物被晕眩
+</p>
+<pre class="example">
+---&gt; First ---&gt; OrderCheck ---&gt;  TurnSkipCheck ---&gt; TurnEnd ---&gt; OrderCheck --&gt; ... --&gt; ToResult
+</pre>
+
+<p>
+本轮人物放技能
+</p>
+<pre class="example">
+---&gt; First ---&gt; OrderCheck ---&gt;  TurnSkipCheck ---&gt; CommandInputStartCheck ---&gt; CommandExecute ---&gt; PostCommandExecute --&gt; StunCheck---&gt; TurnEnd ----&gt; OrderCheck --&gt; ... --&gt; ToResult   
+</pre>
+
+<p>
+本轮人物放多人珍藏
+</p>
+
+<pre class="example">
+---&gt; First ---&gt; OrderCheck ---&gt;  TurnSkipCheck ---&gt; CommandInputStartCheck ---&gt; TogetherAttackExecute_0 ---&gt; PostCommandExecute --&gt; TogetherAttackExecute_0 ---&gt; PostCommandExecute --&gt; StunCheck---&gt; TurnEnd ----&gt; OrderCheck --&gt; ... --&gt; ToResult   
+</pre>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> BattleSystem: 实现</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 它应该有的样子，和它实际的样子</h3>
+<div class="outline-text-3" id="text-3-1">
+<p class="verse">
+<br  />
+整个战斗系统的设计本来应该一目了然， 就像上帝视角一样，或者像序列博弈(sequential game)那样：<br  />
+整个游戏有多少参与人(agents), 这些参与人有什么属性(生命值作为payoff),每个agents有个信息集和行动集(action set)，<br  />
+每轮根据信息集从中行动集选取一个行动，并由payoff function给出行动结果，直到游戏有人退出。<br  />
+<br  />
+在程序上所有信息和method被直接放到系统那，当做全局变量，方便来回调用<br  />
+换言之， 人物是一堆属性的集合， 它的行动要么等待用户输入，要么由系统给出，除开选择一个行动以外什么都不用做。<br  />
+伤害计算，行动值计算，属性相克，对方是否打晕等等作为信息集都是由系统更新给人物。<br  />
+<br  />
+</p>
+<hr  />
+<p class="verse">
+<br  />
+然而你游负责写人物(CharacterHandler)这个class的人，除开人物需要的属性以外，貌似还负责行动值的计算，眩晕的计算(CharacterBattle), AI的设计 (BattleAIData)等等工作，<br  />
+因为每项任务所需要的信息集不同导致有需要把人物外的信息塞到CharacterHandle里面来，导致信息集和设计十分混乱。<br  />
+<br  />
+例如晕眩的数值计算本身是什么都不需要的, 却被与其他状态，伤害计算 (BattleCommandParser)隔离开来。<br  />
+<br  />
+例如任何攻击的特效被放到SkillActionPlayer里，晕眩的却被塞到CharacterBattle里，以致于你在 <a href="#sec-2-3"><code>BattleSystem.Update_Main()</code></a> 里单独看到检查晕眩的一段。<br  />
+<br  />
+例如行动值的计算。单人行动值的计算，完毕之后，还需要行动条(BattleOrder)去为每个行动值排序，于是还是需要外部在做一次工作。<br  />
+<br  />
+例如AI攻击的技能和技能释放对象的选择函数所需要信息集是巨大的，这里却是单人的信息集，所以它又几乎需要把所有信息放置进来(至少需要敌我组队信息)<br  />
+敌我组队信息 (BattlePartyData) 自身是一个人物集合， 然后又被放置到单个人物的信息内，而这种放置并不是指针的， 因为<br  />
+我们可以看到 <a href="#sec-2-3"><code>BattleSystem.Update_Main()</code></a> 每一行动轮都重复着更新组队信息到每个人物的信息内。<br  />
+然而每一轮貌似又只有一个人物需要行动？<br  />
+<br  />
+这种设计的混乱加上人性的懒惰，导致不同程序员的互相引用泛滥（理论下层不该调用上层函数，感谢C#吧, 好的C#没有上下层， 我看你编译器能多吊）<br  />
+当某个函数把某属性交给下一个函数处理时，充斥着反复在组队成员中循环找寻Owner的工作， 亦或者是<br  />
+某位程序员中在一个函数中加一个判定做了safe check，<br  />
+另外一个程序员(也许可能就是他自己)直接利用这个safe check无所顾忌的做了个循环把所有人物扔了进去，而不是将他轻松就知道的人物进行直接调用<br  />
+<br  />
+结果就是: 现在的这个(CharacterHandler)复杂而且功能繁多 （呵呵哈哈哈或或或或或或或或或<br  />
+<br  />
+</p>
+
+<hr  />
+<blockquote>
+<p>
+
+我发誓我只吐槽这一次
+</p>
+</blockquote>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 约定俗成</h3>
+<div class="outline-text-3" id="text-3-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">中文</th>
+<th scope="col" class="left">英文</th>
+<th scope="col" class="left">出处</th>
+<th scope="col" class="left">解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">命令</td>
+<td class="left">command</td>
+<td class="left">BattleCommandData</td>
+<td class="left">包含普攻，技能，珍藏，奇拉拉技能</td>
+</tr>
+
+<tr>
+<td class="left">位置</td>
+<td class="left">join</td>
+<td class="left">BattleDefine.eJoinMember</td>
+<td class="left">包含     屏幕1,2,3位，板凳1,2位，好友位</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+
+
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> 人物.CharacterHandler</h3>
+</div>
+
+<div id="outline-container-sec-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> 组队.BattlePartyData</h3>
+</div>
+
+
+
+<div id="outline-container-sec-3-5" class="outline-3">
+<h3 id="sec-3-5"><span class="section-number-3">3.5</span> 行动条.BattleOrder</h3>
+<div class="outline-text-3" id="text-3-5">
+</div><div id="outline-container-sec-3-5-1" class="outline-4">
+<h4 id="sec-3-5-1"><span class="section-number-4">3.5.1</span> 被调用的时机 (只考虑改变行动条的情形)</h4>
+<div class="outline-text-4" id="text-3-5-1">
+<ul class="org-ul">
+<li>当每一波怪刚进场初始化时，<a href="#sec-2-2"><code>BattleSystem.Update_Prepare()</code></a> 进行到 ePrepareStep.End 会调用 <code>BattleSystem.SetupWaveData(int waveindex)</code> 函数进行初始化， 主要的工作就是初始行动条的初始化;
+</li>
+<li>手动嫖别人老婆和替换替补老婆的时候,替换掉行动条第一个人,ordervalue=0: <code>BattleSystem.ChangePlayerJoinMemberOnInterruputFriend()</code> 
+</li>
+<li>自动死亡时，新上来的人继承原有的死人的OrderValue:  <code>BattleSystem.CalcAutoMemberChange()</code> 中的一句 <code>item.m_OrderValue = deadCharaData3.m_OrderValue</code>
+</li>
+<li>当别人老婆嫖的次数到了之后,如果替换的老婆没死，就继承原来的行动条单元,如果死了(理论上不会出现),删除该单元: <code>BattleSystem.ChangePlayerJoinMemberOnGoBackFriend()</code>
+<ul class="org-ul">
+<li>一通操作之后先检查死亡，再检查别人老婆次数是否到了，然后就是晕眩 <code>eMainStep.PostCommandExecute</code>
+</li>
+</ul>
+</li>
+<li>每轮的操作对己方的行动条影响
+<ul class="org-ul">
+<li>单次命令
+</li>
+<li>集体珍藏
+</li>
+</ul>
+</li>
+<li>每轮操作对敌方的行动条影响
+<ul class="org-ul">
+<li>普通人遭到晕眩
+</li>
+<li>弱者遭到晕眩
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-5-2" class="outline-4">
+<h4 id="sec-3-5-2"><span class="section-number-4">3.5.2</span> 行动条的结构</h4>
+<div class="outline-text-4" id="text-3-5-2">
+<ol class="org-ol">
+<li>行动条上的单元.BattleOrder.FrameData (<code>m_Frames</code>): 
+<ul class="org-ul">
+<li>单元类型.eFrameType: 轮到人或怪(Chara) 还是技能(Card)来执行本轮操作, 技能(Card)诸如3轮加血包，boss的攻击包等, 也被视作行动条上的一个单元
+</li>
+<li>行动值.OrderValue
+</li>
+<li>所有人.owner:  人或怪(Chara)就是自身，技能(Card)就是技能包的释放者
+</li>
+<li>技能包(Card).CardArguments: 技能包的具体信息， 如果是Chara，这里赋值是NULL
+<ul class="org-ul">
+<li><code>m_AliveNum</code>
+</li>
+<li><code>m_RefID</code>
+</li>
+<li><code>m_CommandIndexWasCreated</code>
+</li>
+<li><code>BattleCommandData.m_Command</code>
+</li>
+<li><a href="type.html">技能的种类.eSkillContentType</a>: Card的技能种类:攻击，治疗等等，它甚至是来源于 <code>.m_Command</code> 的数据
+</li>
+</ul>
+</li>
+</ul>
+</li>
+
+<li>行动值的特殊跳跃.BattleOrder.TogetherData (<code>m_TogetherData</code>): 同时释放珍藏会造成某个行动单元进行非常规跳跃
+<ul class="org-ul">
+<li><code>m_JoinOrder</code> (List&lt;BattleDefine.eJoinMember&gt;): 它包含了要进行释放珍藏的人以及顺序
+</li>
+</ul>
+</li>
+
+<li>集体释放珍藏的最大次数: BattleTogetherGauge: (<code>m_Gauge</code>), 由珍藏条储能次数给出： 0, 1 , 2 ,3
+</li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3-5-3" class="outline-4">
+<h4 id="sec-3-5-3"><span class="section-number-4">3.5.3</span> 行动条的基本设定</h4>
+<div class="outline-text-4" id="text-3-5-3">
+<ul class="org-ul">
+<li>行动值的排序.BattleOrder.SortOrder(): 采用的是StableSort,同样行动值的前提下，原有位置保持不变，由行动值小到大排序, 大概因此(138比139快)
+</li>
+<li>行动值的更新.UpdateOrderValue(): 所有单位减去排第一的行动值, 如果&lt;0，重置为0 （理论上不应该发生）, 这个会在 <code>BattleSystem.Update_Main()</code> 进行到 <code>eMainStep.OrderCheck</code> 时召唤 <code>BattleSystem.TurnStartProcess()</code> 调用
+</li>
+<li>集体释放珍藏的判定: 遇到第一个敌人,敌人释放的技能(Card)或者己方某个人物被判定状态异常(由CharacterBattle.CanBeTogetherAttack()定义:麻痹，沉默，睡眠，晕眩)就停止， 按顺序将人物放到TogetherData的list里，直到list里面的人数跟集体释放珍藏的最大次数的数目一样
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3-5-4" class="outline-4">
+<h4 id="sec-3-5-4"><span class="section-number-4">3.5.4</span> 行动值的计算公式</h4>
+<div class="outline-text-4" id="text-3-5-4">
+<ol class="org-ol">
+<li>算法. <code>BattleCommandParser.CalcOrderValue(int spd, float loadFactor, float orderCoef)</code>
+
+<div class="org-src-container">
+
+<pre class="src src-csharp"><span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">num</span> = BattleUtility.DefVal(eBattleDefineDB.OrderValueBaseMax);
+<span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">num2</span> = (<span style="color: #7CB8BB;">int</span>)BattleUtility.DefVal(eBattleDefineDB.OrderValueDecreaseStart); <span style="color: #5F7F5F;">// </span>
+<span style="color: #F0DFAF; font-weight: bold;">if</span> (spd &gt;= num2)
+{
+        <span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">num3</span> = (spd - num2) / (<span style="color: #7CB8BB;">int</span>)BattleUtility.DefVal(eBattleDefineDB.OrderValueDecreaseInterval);
+        num -= (<span style="color: #7CB8BB;">float</span>)(num3 + 1);
+}
+num = Mathf.Max(num, BattleUtility.DefVal(eBattleDefineDB.OrderValueBaseMin));
+<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">value</span> = (<span style="color: #7CB8BB;">float</span>)(<span style="color: #7CB8BB;">int</span>)(num * loadFactor * orderCoef);
+<span style="color: #F0DFAF; font-weight: bold;">return</span> Mathf.Clamp(value, BattleUtility.DefVal(eBattleDefineDB.OrderValueMin), BattleUtility.DefVal(eBattleDefineDB.OrderValueMax));
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>num 是初始基数，100， num2为初始基础最小值,50，具体的查询请看
+</li>
+<li>以给定spd=138为例 (结果与spd=139一样)
+</li>
+<li>首先这个值范围是[15,500] 之间. ([eBattleDefineDB.OrderValueMin ,eBattleDefineDB.OrderValueMax])
+</li>
+<li>速度基数一开始设置为 (eBattleDefineDB.OrderValueBaseMax)为 100.0,并且为浮点数
+<ul class="org-ul">
+<li>如果spd大于等于这个基数，就要对这个值进行调整为: (spd-50)/2并取整 <code>(138-50)/2=44</code>, 再加一之后被100减去 <code>100-(44+1)=55</code> ,最终基数为55
+</li>
+<li>如果小于这个判定，基数为100
+</li>
+</ul>
+</li>
+<li>最终速度为 基数乘以后面两个乘数再取整
+</li>
+</ul>
+</li>
+
+<li>参数的一般调用情形 <code>BattleCommandParser.CalcOrderValue(CharacterHandler charaHndl, BattleCommandData command)</code>
+
+<ul class="org-ul">
+<li>Spd 为建筑加成和好感度加成后的面板数据
+</li>
+<li>LoadFactor: 初始化为1，
+<ul class="org-ul">
+<li>如果执行命令， 则这个值为该命令的 command.LoadFactor;
+</li>
+<li>如果并没有执行命令，则检查是否深处睡眠状态，设这个值为2  这就是被晕眩时的情况 <code>BattleSystem.TurnSkipProcess()</code>
+</li>
+</ul>
+</li>
+<li>orderCoef (statusBuffValue): 初始化为1，如果你身上叠了N层速度buff,每个buff都有一个Value(.Val)，这些buff.Val加总之后数值为Sum， 那么statusBuffValue的值最终是 Sum-N+1, <a href="#coderef-GetStatusBuffValue"class="coderef" onmouseover="CodeHighlightOn(this, 'coderef-GetStatusBuffValue');" onmouseout="CodeHighlightOff(this, 'coderef-GetStatusBuffValue');"><code>BattleDefine.BuffStack.GetValue(true)</code></a>. 这个值不为0即可，为0则调整为1，但最终会被算法设置上下限
+</li>
+</ul>
+</li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3-5-5" class="outline-4">
+<h4 id="sec-3-5-5"><span class="section-number-4">3.5.5</span> 初始化时的行动值计算</h4>
+<div class="outline-text-4" id="text-3-5-5">
+<ul class="org-ul">
+<li>对于双方屏幕三个位置,计算每个人的OrderValue: 
+<div class="org-src-container">
+
+<pre class="src src-csharp">BattleCommandParser.CalcOrderValue(member.CharaBattle.Param.FixedSpd(), 1f, 1f);
+</pre>
+</div>
+<ul class="org-ul">
+<li>注意初始化的数据由 <code>CharacterBattleParam.SetupParams(CharacterHandler owner, float[] townBuffParams)</code> 给出
+</li>
+<li>注意这个FixedSpd()是面板数据，它会根据好感度，建筑等级 受到影响
+<ol class="org-ol">
+<li><code>m_FixedBaseSpd = this.m_Owner.CharaParam.Spd;</code>   面板数据
+</li>
+<li><code>m_FixedBaseSpd = EditUtility.CalcParamCorrect(this.m_FixedBaseSpd, param2.m_CorrectSpd);</code> 好感度加成
+</li>
+<li><code>m_FixedBaseSpd = EditUtility.CalcParamCorrect(this.m_FixedBaseSpd, this.m_TBuff[5]);</code> 建筑物加成
+</li>
+<li>最终这个 <code>m_FixedBaseSpd</code> 被确定为 <code>CharaBattle.Param.FixedSpd()</code>
+</li>
+<li>CalcParamCorrect算法为, 注意 correct 为10, 137*1.1=150.7再向上取整变成151
+<div class="org-src-container">
+
+<pre class="src src-csharp"><span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">CalcParamCorrect</span>(<span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">val</span>, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">correct</span>)
+{
+        <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">num</span> = 1f + correct * 0.01f;
+        <span style="color: #F0DFAF; font-weight: bold;">return</span> (<span style="color: #7CB8BB;">int</span>)Mathf.Ceil((<span style="color: #7CB8BB;">float</span>)val * num);
+}
+</pre>
+</div>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+
+<li>把所有人变成FrameData放到BattleSystem的BattleOrder里，顺序为先放我方三人，再放敌方三人, 因此根据<i>行动条基本设定</i>, 同等速度下，我方优先，然后位置优先
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+
+
+<div id="outline-container-sec-3-5-6" class="outline-4">
+<h4 id="sec-3-5-6"><span class="section-number-4">3.5.6</span> 单次命令的行动条变化</h4>
+<div class="outline-text-4" id="text-3-5-6">
+<ol class="org-ol">
+<li>Chara Type <code>BattleCommandParser.UpdateOrder(BattleOrder battleOrder, int commandIndex, bool isUseUniqueSkill)</code>
+<ul class="org-ul">
+<li>按照 <code>BattleCommandParser.CalcOrderValue(owner, commandIndex, isUseUniqueSkill)</code> 计算新的行动值
+</li>
+<li>并复制同样一个单元但是有新算好的orderValue重新排位到行动条上
+</li>
+</ul>
+</li>
+
+<li>Card  Type  <code>BattleCommandParser.UpdateOrder(BattleOrder battleOrder, int commandIndex, bool isUseUniqueSkill)</code>
+<ul class="org-ul">
+<li>Card的可使用次数-1
+</li>
+<li>如果Card的可使用次数仍然&gt;0, 按照 <code>BattleCommandParser.CalcOrderValue(owner.CharaBattle.Param.FixedSpd(), frameDataAt.m_CardArgs.m_Command.LoadFactor, 1f)</code> 计算新的行动值
+</li>
+<li>注意到一来没有状态影响，二来，Card 行动值FixedSpd 继承于释放者的FixedSpd
+</li>
+<li>并复制同样一个单元但是有新算好的orderValue重新排位到行动条上
+</li>
+</ul>
+</li>
+
+<li>最终在每轮把处理后的第一个单元去掉 <code>BattleOrder.SlideFrames()</code>, 所以1,2步才能选择复制         
+</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-sec-3-5-7" class="outline-4">
+<h4 id="sec-3-5-7"><span class="section-number-4">3.5.7</span> 集体珍藏的行动条变化</h4>
+<div class="outline-text-4" id="text-3-5-7">
+<ul class="org-ul">
+<li>由 <code>UpdateOrderAfterTogetherAttack(BattleOrder battleOrder, List&lt;CharacterHandler&gt; togetherAttackedCharaHndls)</code> 单独处理
+</li>
+<li>先从行动条里删除所有释放珍藏的单元
+</li>
+<li>分别计算orderValue: <code>orderValue = BattleCommandParser.CalcOrderValue(togetherAttackedCharaHndls[k], -1, true)</code>  从这里提出珍藏command 再用算法
+</li>
+<li>再按珍藏释放顺序把释放单元逐一加回来，并赋予刚算好的orderValue <code>battleOrder.AddFrameData(BattleOrder.eFrameType.Chara, togetherAttackedCharaHndls[k], orderValue, null)</code>
+</li>
+<li>这里根据基本设定，即使在两者ordervalue 一样时，释放珍藏顺序也改变了原有优先级
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-5-8" class="outline-4">
+<h4 id="sec-3-5-8"><span class="section-number-4">3.5.8</span> 敌方普通人遭到晕眩 <code>BattleCommandParser.UpdateOrderOnStun(BattleOrder battleOrder)</code></h4>
+<div class="outline-text-4" id="text-3-5-8">
+<ul class="org-ul">
+<li>判断敌人如果被晕眩，由施法者FixedSpd()和命令计算 num： <code>num=BattleCommandParser.CalcOrderValue(owner, owner.CharaBattle.ExecCommand)</code>
+</li>
+<li>该敌人的orderValue加上 <code>num * (BattleUtility.DefVal(eBattleDefineDB.StunAdditiveOrderValueRatioWhenStun) * 0.01f)</code> (num*0.2)
+</li>
+<li>等价于原有 orderValue+num*1.2
+</li>
+<li>对行动条重新排序
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-5-9" class="outline-4">
+<h4 id="sec-3-5-9"><span class="section-number-4">3.5.9</span> 敌方弱者遭到晕眩</h4>
+<div class="outline-text-4" id="text-3-5-9">
+<ul class="org-ul">
+<li>在普通晕眩基础上加上 <code>orderValue*(BattleUtility.DefVal(eBattleDefineDB.StunAdditiveOrderValueRatioWhenAttacked) * 0.01f)</code> (num*0.5)
+</li>
+<li>等价于原有orderValue*1.5
+</li>
+<li>对行动条重新排序
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-sec-3-6" class="outline-3">
+<h3 id="sec-3-6"><span class="section-number-3">3.6</span> 伤害状态计算与绘制.SkillActionPlayer</h3>
+</div>
+
+
+<div id="outline-container-sec-3-7" class="outline-3">
+<h3 id="sec-3-7"><span class="section-number-3">3.7</span> AI的实现.BattleAIParser</h3>
+<div class="outline-text-3" id="text-3-7">
+</div><div id="outline-container-sec-3-7-1" class="outline-4">
+<h4 id="sec-3-7-1"><span class="section-number-4">3.7.1</span> 概览</h4>
+<div class="outline-text-4" id="text-3-7-1">
+<p class="verse">
+先确定释放什么技能，再确定对谁释放<br  />
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3-7-2" class="outline-4">
+<h4 id="sec-3-7-2"><span class="section-number-4">3.7.2</span> 被调用的时机</h4>
+<div class="outline-text-4" id="text-3-7-2">
+<p>
+<a href="#sec-2-3"><code>BattleSystem.Update_Main()</code></a> 进行到 eMainStep.CommandInputStartCheck 等待指令输入时，
+ 会调用 BattleSystem.CommandInputStart()函数，如果判定本轮行动人是AI, 
+ 会调用 BattleSystem.CommandDecisionByAI()函数, 在指定行动AI人物owner后，
+ 会调用 BattleAIParser.SolveBattleAI(owner)函数, 并将结果储存到 BattleAISolveResult里。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3-7-3" class="outline-4">
+<h4 id="sec-3-7-3"><span class="section-number-4">3.7.3</span> 返回的结果.BattleAISolveResult</h4>
+<div class="outline-text-4" id="text-3-7-3">
+<p>
+它包括三个参数: 放什么技能， 对谁放， 技能是不是珍藏 
+</p>
+
+<ul class="org-ul">
+<li>public int <code>m_CommandIndex</code> = -1;  // 命令index，最终命令在 <code>owner.CharacterBattle.m_commands</code> 里找到这个命令
+</li>
+
+<li>public BattleDefine.eJoinMember <code>m_TargetJoin</code> = BattleDefine.eJoinMember.None; // 命令释放的对象的所处位置
+</li>
+
+<li>public bool <code>m_IsChargeSkill</code>;    // 这个技能需不需要充能, 即珍藏
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3-7-4" class="outline-4">
+<h4 id="sec-3-7-4"><span class="section-number-4">3.7.4</span> 确定释放什么技能.SolveBattleAI</h4>
+<div class="outline-text-4" id="text-3-7-4">
+<ol class="org-ol">
+<li>加载的AI命令集信息 ( <code>BattleAIData</code> ) 的构建: 
+<ul class="org-ul">
+<li>( <code>BattleAIExecData</code> ) :  它包含一个 命令index（什么命令）， 一个比重 ( <code>m_Ratio</code> ), 是否按顺序选择对象 <code>BattleAIExecData.isCommandTargetSelectionInOrder</code> ， 一堆释放条件 和 一堆flag 
+</li>
+<li>( <code>BattleAICommandData</code> )： 一个 <code>BattleAIExecData</code> 的集合, 使用限制次数 <code>m_ExecNum</code> 以及 一堆条件 <code>.m_Conditions</code> 
+</li>
+<li>( <code>BattleAIPatternData</code> ) ： 一个 <code>BattleAICommandData</code> 的集合
+</li>
+<li>( <code>BattleAIData</code> ) ： 包含了一堆 <code>BattleAIPatternData</code> 以及如何切换他们的信息， 技能释放对象的最后选择顺序( <code>m_SingleTargetPriorityWhenHateSame</code> <i>单体仇恨与仇恨排序.BattleAIHateResult</i> 中的 ABC or CBA )
+</li>
+</ul>
+</li>
+
+<li>所以我们先找出来一个可用命令集 <code>aiCommands[]</code> 相当于 <code>BattleAIPatternData</code> 以供选择
+<ul class="org-ul">
+<li>有珍藏可以放: <code>BattleAIParser.SolveBattleAI_ChargeSkill</code> ， 就只把珍藏放进 <code>aiCommands[]</code> 里
+</li>
+<li>没珍藏放技能: <code>BattleAIParser.SolveBattleAI_Skill</code> ， 从0开始在一堆 <code>BattleAIPatternData</code> 里选择一个满足切换条件的
+</li>
+</ul>
+</li>
+
+<li>然后我们再在 <code>aiCommands[]</code> 找到第一个满足下列两个条件的命令集 相当于 <code>BattleAICommandData</code> 以供选择: 
+<ul class="org-ul">
+<li>命令集释放次数（ <code>CharaBattle.GetAIExecedNum</code> ）未达到限制 ( <code>BattleAICommandData.m_ExecNum</code> )
+</li>
+<li>ai，ai技能可释放的对象满足 ( <code>BattleAIParser.JudgeBattleAICommandConditions</code> ) 命令集释放条件 ( <code>BattleAICommandData.m_Conditions</code> ) 
+</li>
+<li>如果
+<ul class="org-ul">
+<li>一个都没有找到: 跳到 5
+</li>
+<li>找到一个命令集： 停止寻找（我们只需一个）， 跳到 4
+</li>
+</ul>
+</li>
+</ul>
+</li>
+
+<li>最后我们需要在这个选定的命令集 <code>BattleAICommandData</code> 里随机挑出一个命令 <code>BattleAIExecData</code> 来:
+<ul class="org-ul">
+<li>构建一个向量 array, 对应于 <code>BattleAICommandData</code> 里的各个 <code>BattleAIExecData</code>
+</li>
+<li>把比重 <code>BattleAIExecData.m_Ratio</code> 加总， 然后对应array的位置计算比重/比重和， array 就是 比重的比重
+</li>
+<li>随机生成 0 到 1 中间的一个数字
+</li>
+<li>从第一个 array 的数值一直加加到 如果我们再加下一个数值就会超过这个随机数时停止， 返回下一个的index
+</li>
+<li>这个 index 指定的 <code>BattleAIExecData</code> 中所指定的 命令index 如果找得到就是我们要释放的技能
+</li>
+<li>如果找不到 跳到 5
+</li>
+</ul>
+</li>
+
+<li>释放 ai 可以释放的第一个命令，往往是普攻 ( <code>CharacterHandler.CharaBattle.GetCommandDatas()[0]</code> )
+</li>
+
+<li>附注: 3 中的( <code>BattleAIParser.JudgeBattleAICommandConditions</code> ) 包含非常多的选项（我方敌方血线，异常状态，技能使用，存活数量，集体攻击，换人等等）， 所以 ( <code>BattleAIData</code> )可以设计的很通用
+</li>
+
+<li>下一步： 我们需要根据选出来的技能算出仇恨（利用互克，血线，老弱病残等等）来选出技能释放对象
+</li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3-7-5" class="outline-4">
+<h4 id="sec-3-7-5"><span class="section-number-4">3.7.5</span> 施放对象的构建</h4>
+<div class="outline-text-4" id="text-3-7-5">
+<ol class="org-ol">
+<li>我们先根据是对敌方放还是己方放，把可以释放的对象找出来放到list里， 这个list是按站位排序的，我们会在 确定该技能释放的对象.SolveTargetJoinFromHateResults中发现，条件完全一样时是会选择第一个，所以这一步很重要。
+</li>
+<li>如果释放对象只有一个的话就是他了，如果释放对象是全体我们就不用算了
+</li>
+<li>如果还要求 <code>BattleAIExecData.isCommandTargetSelectionInOrder</code> 就要考虑是否要加入仇恨吸引因素， 毕竟骑士技能和你忍叔可以拉仇恨 ( <code>CharaBattle.Param.GetHateChangeValue()</code> )
+<ul class="org-ul">
+<li>这个值都&gt;0的只有一个那就是它了， 跳过后面所有计算
+</li>
+<li>这个值都=0的只有一个那就是它了， 跳过后面所有计算
+</li>
+<li>这个值都=0的有很多个那么从 上次技能使用位置 ( <code>CharaBattle.GetOldSingleTargetIndex(commandData.MainSkillTargetType)</code> )的下一个位置开始 （0-&gt;1-&gt;2-&gt;0）,这个值都=0的谁第一个在这个位置上就选谁， 跳过后面所有计算
+</li>
+<li>这个值&gt;0的有多个那么在他们中间开始计算仇恨
+</li>
+<li>如果全&lt;0 对初始list开始计算仇恨
+</li>
+</ul>
+</li>
+</ol>
+</div>
+</div>
+
+
+
+<div id="outline-container-sec-3-7-6" class="outline-4">
+<h4 id="sec-3-7-6"><span class="section-number-4">3.7.6</span> 状态仇恨的计算.CalcHitSingleConditionCount</h4>
+<div class="outline-text-4" id="text-3-7-6">
+<ul class="org-ul">
+<li>如果要求 <code>BattleAIExecData.isCommandTargetSelectionInOrder</code> 就不用算了， <code>m_HitSingleConditionCount =0</code>
+</li>
+
+<li>否则进行五个状态的判断:
+
+<ul class="org-ul">
+<li><code>是不是要死了.Judge_Dying</code>
+</li>
+
+<li><code>是不是某特定属性.Judge_Element</code>
+</li>
+
+<li><code>属性是否克制.Judge_WeakElement</code>
+</li>
+
+<li><code>是不是某特定职业.Judge_Class</code>
+</li>
+
+<li><code>是否落入不正常状态.Judge_StateAbnormal</code>
+</li>
+</ul>
+</li>
+
+<li>加总.CalcHitSingleConditionCount : <code>m_HitSingleConditionCount = [ 0,  5 ]</code>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3-7-7" class="outline-4">
+<h4 id="sec-3-7-7"><span class="section-number-4">3.7.7</span> 单体(target)伤害仇恨的计算.BattleAIParser.SolveTargetJoin</h4>
+<div class="outline-text-4" id="text-3-7-7">
+<ol class="org-ol">
+<li>在eBattleDefineDB.HateValueMin 与 HateValueMin.HateValueMax+1 之间生成一个随机数, 复制给 <code>m_HateValue</code>
+</li>
+<li><code>m_HateValue *= ( 1f + target.Param.HateChangeValue)</code>
+</li>
+<li><code>m_HateValue += (float)((eBattleDefineDB.HateAIConditionCoef) * .m_HitSingleConditionCount)</code> 
+</li>
+<li>如果你是屏幕上第一个位置（join）的人的话，不好意思还要
+<code>m_HateValue += BattleUtility.DefVal(eBattleDefineDB.HateValueJoin1)</code>
+</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-sec-3-7-8" class="outline-4">
+<h4 id="sec-3-7-8"><span class="section-number-4">3.7.8</span> 单体仇恨与仇恨排序.BattleAIHateResult</h4>
+<div class="outline-text-4" id="text-3-7-8">
+<ul class="org-ul">
+<li>它包括三个参数: 谁，伤害仇恨，状态仇恨
+
+<ul class="org-ul">
+<li>public BattleDefine.eJoinMember  <code>m_Join</code>;  // 计算仇恨时该单体位置
+</li>
+
+<li>public float <code>m_HateValue</code>;  // 伤害仇恨 
+</li>
+
+<li>public int <code>m_HitSingleConditionCount</code>; // 状态仇恨： 计算满足哪几个不好的状态的，谁不好的状态最多
+</li>
+</ul>
+</li>
+
+<li>排序: 如何判断谁比谁更可恨   
+<ul class="org-ul">
+<li>BattleAIParser.CompareHateResult: 伤害仇恨越高，谁更可恨，同等伤害仇恨，谁状态仇恨越高越可恨
+</li>
+<li>若仍然相同 请选择  <code>CompareHateResult_JoinABC</code> （ <code>CompareHateResult_JoinCBA</code> ） ： 谁的位置更靠前（后）更可恨
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+
+
+
+
+
+
+<div id="outline-container-sec-3-7-9" class="outline-4">
+<h4 id="sec-3-7-9"><span class="section-number-4">3.7.9</span> 确定该技能释放的对象.SolveTargetJoinFromHateResults</h4>
+<div class="outline-text-4" id="text-3-7-9">
+<ul class="org-ul">
+<li>我们算出所有对象的单体仇恨
+</li>
+<li>我们按照单体仇恨与仇恨排序来算出最可恨的人（嘤嘤嘤）
+</li>
+<li>如果统统一样可恨就选第一个当释放对象
+</li>
+<li>如果不一样，但最可恨的有多个就看 <code>m_SingleTargetPriorityWhenHateSame</code> 是 <code>CompareHateResult_JoinABC</code> 还是 <code>CompareHateResult_JoinCBA</code> 按位置排序完来选了
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+
+
+<div id="outline-container-sec-3-8" class="outline-3">
+<h3 id="sec-3-8"><span class="section-number-3">3.8</span> 实现.BattleSystem</h3>
+</div>
+<div id="outline-container-sec-3-9" class="outline-3">
+<h3 id="sec-3-9"><span class="section-number-3">3.9</span> 不会怎么提的数据导入.BattleSystemData</h3>
+</div>
+
+<div id="outline-container-sec-3-10" class="outline-3">
+<h3 id="sec-3-10"><span class="section-number-3">3.10</span> 不会怎么提的人机交互.BattleInputData</h3>
+</div>
+
+<div id="outline-container-sec-3-11" class="outline-3">
+<h3 id="sec-3-11"><span class="section-number-3">3.11</span> 不会怎么提的多媒体效果实现.XScene</h3>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: yuanchuan cao</p>
+<p class="date">Created: 2018-06-08 五 15:43</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
